@@ -10,5 +10,6 @@ public class FollowTarget : MonoBehaviour
     void Update()
     {
         transform.position = target.position;
+        transform.rotation = target.rotation;
     }
 }

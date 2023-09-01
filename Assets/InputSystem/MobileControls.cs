@@ -50,7 +50,7 @@ public partial class @MobileControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""1cb6b08b-fb2a-483b-87f4-a031929d05b2"",
-                    ""path"": ""<Gamepad>/leftStick"",
+                    ""path"": ""<Joystick>/stick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
