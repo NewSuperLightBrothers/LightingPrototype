@@ -74,6 +74,7 @@ crashlytics-build.properties
 
 # CUSTOM ADD
 .vsconfig
+.vscode
 /.idea/
 
 # Google Services (e.g. APIs or Firebase)
