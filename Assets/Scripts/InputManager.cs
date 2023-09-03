@@ -38,6 +38,10 @@ public class InputManager : MonoBehaviour {
         inputActions.Locomotion.Joystick.started += OnJoystickStartAndPerform;
         inputActions.Locomotion.Joystick.performed += OnJoystickStartAndPerform;
         inputActions.Locomotion.Joystick.canceled += OnJoystickCancel;
+
+        inputActions.Interaction.SpaceKey.started += OnSpaceKey;
+        inputActions.Interaction.SpaceKey.performed += OnSpaceKey;
+        inputActions.Interaction.SpaceKey.canceled += OnSpaceKey;
     }
     private void OnJoystickStartAndPerform(InputAction.CallbackContext context) {
         _inputData.velocityIS = context.ReadValue<Vector2>();
@@ -45,12 +49,19 @@ public class InputManager : MonoBehaviour {
     private void OnJoystickCancel(InputAction.CallbackContext context) {
         _inputData.velocityIS.Set(0, 0);
     }
+    private void OnSpaceKey(InputAction.CallbackContext context) {
+        _inputData.isJump = context.ReadValue<float>() == 1;
+    }
 
     private void OnDisable() {
         inputActions.Disable();
         inputActions.Locomotion.Joystick.started -= OnJoystickStartAndPerform;
         inputActions.Locomotion.Joystick.performed -= OnJoystickStartAndPerform;
         inputActions.Locomotion.Joystick.canceled -= OnJoystickCancel;
+
+        inputActions.Interaction.SpaceKey.started -= OnSpaceKey;
+        inputActions.Interaction.SpaceKey.performed -= OnSpaceKey;
+        inputActions.Interaction.SpaceKey.canceled -= OnSpaceKey;
     }
 
     private void Start() {
@@ -63,10 +74,11 @@ public class InputManager : MonoBehaviour {
         Vector2 touchDelta = GetTouchDelta();
         _inputData.swipeIS = touchDelta;
         
-        text.text = touchDelta.ToString() + "\n" + Touchscreen.current.primaryTouch.startPosition.value;
+        //text.text = touchDelta.ToString() + "\n" + Touchscreen.current.primaryTouch.startPosition.value;
     }
 
     private Vector2 GetTouchDelta() {
+        if (Touchscreen.current == null) return Vector2.zero;
         if (Touchscreen.current.touches.Count <= 0) return Vector2.zero;
 
         return Touchscreen.current.touches

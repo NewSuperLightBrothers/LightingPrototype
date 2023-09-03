@@ -54,7 +54,7 @@
             "id": "31d9f56b-8828-4530-a1c8-b5547147da40",
             "actions": [
                 {
-                    "name": "ButtonEast",
+                    "name": "SpaceKey",
                     "type": "Button",
                     "id": "b49aabcc-6229-4cd1-aa77-55d73fcf32d9",
                     "expectedControlType": "Button",
@@ -63,7 +63,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ButtonWest",
+                    "name": "MouseLeft",
                     "type": "Button",
                     "id": "9ab946fc-bcf1-422e-b77e-360ff828f97d",
                     "expectedControlType": "Button",
@@ -121,22 +121,22 @@
                 {
                     "name": "",
                     "id": "8fe488c1-8df1-401e-8186-455f58de3a1d",
-                    "path": "<Gamepad>/buttonEast",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ButtonEast",
+                    "action": "SpaceKey",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "9ffcf376-31d9-4683-bf69-65055156a7d3",
-                    "path": "<Gamepad>/buttonWest",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ButtonWest",
+                    "action": "MouseLeft",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

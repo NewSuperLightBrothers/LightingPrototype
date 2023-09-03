@@ -76,7 +76,7 @@ public partial class @MobileControls: IInputActionCollection2, IDisposable
             ""id"": ""31d9f56b-8828-4530-a1c8-b5547147da40"",
             ""actions"": [
                 {
-                    ""name"": ""ButtonEast"",
+                    ""name"": ""SpaceKey"",
                     ""type"": ""Button"",
                     ""id"": ""b49aabcc-6229-4cd1-aa77-55d73fcf32d9"",
                     ""expectedControlType"": ""Button"",
@@ -85,7 +85,7 @@ public partial class @MobileControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ButtonWest"",
+                    ""name"": ""MouseLeft"",
                     ""type"": ""Button"",
                     ""id"": ""9ab946fc-bcf1-422e-b77e-360ff828f97d"",
                     ""expectedControlType"": ""Button"",
@@ -143,22 +143,22 @@ public partial class @MobileControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8fe488c1-8df1-401e-8186-455f58de3a1d"",
-                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ButtonEast"",
+                    ""action"": ""SpaceKey"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""9ffcf376-31d9-4683-bf69-65055156a7d3"",
-                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ButtonWest"",
+                    ""action"": ""MouseLeft"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -228,8 +228,8 @@ public partial class @MobileControls: IInputActionCollection2, IDisposable
         m_Locomotion_GyroAngularVelocity = m_Locomotion.FindAction("GyroAngularVelocity", throwIfNotFound: true);
         // Interaction
         m_Interaction = asset.FindActionMap("Interaction", throwIfNotFound: true);
-        m_Interaction_ButtonEast = m_Interaction.FindAction("ButtonEast", throwIfNotFound: true);
-        m_Interaction_ButtonWest = m_Interaction.FindAction("ButtonWest", throwIfNotFound: true);
+        m_Interaction_SpaceKey = m_Interaction.FindAction("SpaceKey", throwIfNotFound: true);
+        m_Interaction_MouseLeft = m_Interaction.FindAction("MouseLeft", throwIfNotFound: true);
         m_Interaction_ButtonNorth = m_Interaction.FindAction("ButtonNorth", throwIfNotFound: true);
         m_Interaction_ButtonSouth = m_Interaction.FindAction("ButtonSouth", throwIfNotFound: true);
         m_Interaction_LeftTrigger = m_Interaction.FindAction("LeftTrigger", throwIfNotFound: true);
@@ -350,8 +350,8 @@ public partial class @MobileControls: IInputActionCollection2, IDisposable
     // Interaction
     private readonly InputActionMap m_Interaction;
     private List<IInteractionActions> m_InteractionActionsCallbackInterfaces = new List<IInteractionActions>();
-    private readonly InputAction m_Interaction_ButtonEast;
-    private readonly InputAction m_Interaction_ButtonWest;
+    private readonly InputAction m_Interaction_SpaceKey;
+    private readonly InputAction m_Interaction_MouseLeft;
     private readonly InputAction m_Interaction_ButtonNorth;
     private readonly InputAction m_Interaction_ButtonSouth;
     private readonly InputAction m_Interaction_LeftTrigger;
@@ -361,8 +361,8 @@ public partial class @MobileControls: IInputActionCollection2, IDisposable
     {
         private @MobileControls m_Wrapper;
         public InteractionActions(@MobileControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @ButtonEast => m_Wrapper.m_Interaction_ButtonEast;
-        public InputAction @ButtonWest => m_Wrapper.m_Interaction_ButtonWest;
+        public InputAction @SpaceKey => m_Wrapper.m_Interaction_SpaceKey;
+        public InputAction @MouseLeft => m_Wrapper.m_Interaction_MouseLeft;
         public InputAction @ButtonNorth => m_Wrapper.m_Interaction_ButtonNorth;
         public InputAction @ButtonSouth => m_Wrapper.m_Interaction_ButtonSouth;
         public InputAction @LeftTrigger => m_Wrapper.m_Interaction_LeftTrigger;
@@ -377,12 +377,12 @@ public partial class @MobileControls: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_InteractionActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_InteractionActionsCallbackInterfaces.Add(instance);
-            @ButtonEast.started += instance.OnButtonEast;
-            @ButtonEast.performed += instance.OnButtonEast;
-            @ButtonEast.canceled += instance.OnButtonEast;
-            @ButtonWest.started += instance.OnButtonWest;
-            @ButtonWest.performed += instance.OnButtonWest;
-            @ButtonWest.canceled += instance.OnButtonWest;
+            @SpaceKey.started += instance.OnSpaceKey;
+            @SpaceKey.performed += instance.OnSpaceKey;
+            @SpaceKey.canceled += instance.OnSpaceKey;
+            @MouseLeft.started += instance.OnMouseLeft;
+            @MouseLeft.performed += instance.OnMouseLeft;
+            @MouseLeft.canceled += instance.OnMouseLeft;
             @ButtonNorth.started += instance.OnButtonNorth;
             @ButtonNorth.performed += instance.OnButtonNorth;
             @ButtonNorth.canceled += instance.OnButtonNorth;
@@ -402,12 +402,12 @@ public partial class @MobileControls: IInputActionCollection2, IDisposable
 
         private void UnregisterCallbacks(IInteractionActions instance)
         {
-            @ButtonEast.started -= instance.OnButtonEast;
-            @ButtonEast.performed -= instance.OnButtonEast;
-            @ButtonEast.canceled -= instance.OnButtonEast;
-            @ButtonWest.started -= instance.OnButtonWest;
-            @ButtonWest.performed -= instance.OnButtonWest;
-            @ButtonWest.canceled -= instance.OnButtonWest;
+            @SpaceKey.started -= instance.OnSpaceKey;
+            @SpaceKey.performed -= instance.OnSpaceKey;
+            @SpaceKey.canceled -= instance.OnSpaceKey;
+            @MouseLeft.started -= instance.OnMouseLeft;
+            @MouseLeft.performed -= instance.OnMouseLeft;
+            @MouseLeft.canceled -= instance.OnMouseLeft;
             @ButtonNorth.started -= instance.OnButtonNorth;
             @ButtonNorth.performed -= instance.OnButtonNorth;
             @ButtonNorth.canceled -= instance.OnButtonNorth;
@@ -447,8 +447,8 @@ public partial class @MobileControls: IInputActionCollection2, IDisposable
     }
     public interface IInteractionActions
     {
-        void OnButtonEast(InputAction.CallbackContext context);
-        void OnButtonWest(InputAction.CallbackContext context);
+        void OnSpaceKey(InputAction.CallbackContext context);
+        void OnMouseLeft(InputAction.CallbackContext context);
         void OnButtonNorth(InputAction.CallbackContext context);
         void OnButtonSouth(InputAction.CallbackContext context);
         void OnLeftTrigger(InputAction.CallbackContext context);
