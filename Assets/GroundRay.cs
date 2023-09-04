@@ -23,6 +23,8 @@ public class GroundRay : MonoBehaviour
     public float rayDistance;
     public float rayMaxDistance;
 
+    public bool enableRay = true;
+
     private void Start() {
         _lineRenderer = GetComponent<LineRenderer>();
         rayDistance = Vector3.Distance(_lineRenderer.GetPosition(0), _lineRenderer.GetPosition(1));
@@ -30,7 +32,7 @@ public class GroundRay : MonoBehaviour
     }
 
     public void OnUpdate() {
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitInfo, rayMaxDistance)) {
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitInfo, rayMaxDistance) && enableRay) {
             point.isNull = false;
             point.value = hitInfo.point;
 
