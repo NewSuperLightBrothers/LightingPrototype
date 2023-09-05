@@ -5,16 +5,16 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Linq;
 using UnityEngine.EventSystems;
-using TMPro;
 using ExitGames.Client.Photon.StructWrapping;
 using UnityEngine.UI;
+using Unity.Burst.Intrinsics;
 
 [System.Serializable]
 public class InputManagerData {
     public Vector2 velocityIS;
-
     public Vector2 swipeIS;
     public bool isJump;
+    public bool isRun;
     public bool isFire;
     public Vector3 characterForwardWS;
 }
@@ -29,21 +29,24 @@ public class InputManager : MonoBehaviour {
     private Rect _rect;
     private Image _image;
 
-    public TextMeshProUGUI text;
+    public float screenSensitivity;
+    private Vector2 oldVelocityIS;
+
+    private float pressTimer, releaseTimer;
 
     private void Awake() {
         inputActions = new();
         inputActions.Enable();
         inputActions.Interaction.Touchscreen.Enable();
-        inputActions.Locomotion.Joystick.started += OnJoystickStartAndPerform;
-        inputActions.Locomotion.Joystick.performed += OnJoystickStartAndPerform;
+        inputActions.Locomotion.Joystick.started += OnJoystickStart;
+        //inputActions.Locomotion.Joystick.performed += OnJoystickStartAndPerform;
         inputActions.Locomotion.Joystick.canceled += OnJoystickCancel;
 
         inputActions.Interaction.SpaceKey.started += OnSpaceKey;
         inputActions.Interaction.SpaceKey.performed += OnSpaceKey;
         inputActions.Interaction.SpaceKey.canceled += OnSpaceKey;
     }
-    private void OnJoystickStartAndPerform(InputAction.CallbackContext context) {
+    private void OnJoystickStart(InputAction.CallbackContext context) {
         _inputData.velocityIS = context.ReadValue<Vector2>();
     }
     private void OnJoystickCancel(InputAction.CallbackContext context) {
@@ -55,8 +58,8 @@ public class InputManager : MonoBehaviour {
 
     private void OnDisable() {
         inputActions.Disable();
-        inputActions.Locomotion.Joystick.started -= OnJoystickStartAndPerform;
-        inputActions.Locomotion.Joystick.performed -= OnJoystickStartAndPerform;
+        inputActions.Locomotion.Joystick.started -= OnJoystickStart;
+        //inputActions.Locomotion.Joystick.performed -= OnJoystickStartAndPerform;
         inputActions.Locomotion.Joystick.canceled -= OnJoystickCancel;
 
         inputActions.Interaction.SpaceKey.started -= OnSpaceKey;
@@ -69,13 +72,24 @@ public class InputManager : MonoBehaviour {
         _image = _joystickButton.gameObject.GetComponent<Image>();
         _rect.position = _joystickButton.parent.Get<RectTransform>().anchoredPosition - (_rect.size /2) + new Vector2(_image.raycastPadding.x, _image.raycastPadding.y);
         _rect.size -= new Vector2(_image.raycastPadding.x, _image.raycastPadding.y) * 2;
+        
     }
     private void Update() {
         Vector2 touchDelta = GetTouchDelta();
-        _inputData.swipeIS = touchDelta;
-        
-        //text.text = touchDelta.ToString() + "\n" + Touchscreen.current.primaryTouch.startPosition.value;
+        _inputData.swipeIS = touchDelta * screenSensitivity;
+
     }
+
+    private void LateUpdate() {
+        if (_inputData.velocityIS != Vector2.zero && oldVelocityIS == Vector2.zero) {
+            
+        } else if (_inputData.velocityIS == Vector2.zero && oldVelocityIS != Vector2.zero) {
+            
+        }
+
+        oldVelocityIS = _inputData.velocityIS;
+    }
+
 
     private Vector2 GetTouchDelta() {
         if (Touchscreen.current == null) return Vector2.zero;

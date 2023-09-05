@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour {
             
         }
 
-        if (inputManager.InputData.isJump && isJumpable) {
+        if (inputManager.InputData.isJump && isJumpable && jumpState == 0) {
             isJumpable = false;
             StartCoroutine(IJumpCharge());
         }
@@ -86,12 +86,12 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void RotateCamera() {
-        rotationOS += inputManager.InputData.swipeIS * 0.1f;
+        rotationOS += inputManager.InputData.swipeIS;
 
         rotationOS.y = Mathf.Clamp(rotationOS.y, -90f, 90f);
         rotationOS.x %= 360f;
 
-        crosshair.rotation = Quaternion.Euler(rotationOS.y, -rotationOS.x, 0);
+        crosshair.rotation = Quaternion.Euler(-rotationOS.y, rotationOS.x, 0);
     }
     
     private Vector3 GetVelocityWSfromSlope(Vector3 velocity) {
