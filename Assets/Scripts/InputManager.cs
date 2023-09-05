@@ -38,12 +38,22 @@ public class InputManager : MonoBehaviour {
         inputActions = new();
         inputActions.Enable();
         inputActions.Interaction.Touchscreen.Enable();
+
+        inputActions.Locomotion.Joystick.started -= OnJoystickStartTimer;
+        inputActions.Locomotion.Joystick.started += OnJoystickStartTimer;
+
+        inputActions.Locomotion.Joystick.started -= OnJoystickStart;
         inputActions.Locomotion.Joystick.started += OnJoystickStart;
-        //inputActions.Locomotion.Joystick.performed += OnJoystickStartAndPerform;
+        inputActions.Locomotion.Joystick.performed -= OnJoystickStart;
+        inputActions.Locomotion.Joystick.performed += OnJoystickStart;
+        inputActions.Locomotion.Joystick.canceled -= OnJoystickCancel;
         inputActions.Locomotion.Joystick.canceled += OnJoystickCancel;
 
+        inputActions.Interaction.SpaceKey.started -= OnSpaceKey;
         inputActions.Interaction.SpaceKey.started += OnSpaceKey;
+        inputActions.Interaction.SpaceKey.performed -= OnSpaceKey;
         inputActions.Interaction.SpaceKey.performed += OnSpaceKey;
+        inputActions.Interaction.SpaceKey.canceled -= OnSpaceKey;
         inputActions.Interaction.SpaceKey.canceled += OnSpaceKey;
     }
     private void OnJoystickStart(InputAction.CallbackContext context) {
@@ -52,14 +62,22 @@ public class InputManager : MonoBehaviour {
     private void OnJoystickCancel(InputAction.CallbackContext context) {
         _inputData.velocityIS.Set(0, 0);
     }
+
+    private void OnJoystickStartTimer(InputAction.CallbackContext context) {
+        //pressTimer = StartCoroutine();
+    }
+
+    //private float IEnumerator I
+
     private void OnSpaceKey(InputAction.CallbackContext context) {
         _inputData.isJump = context.ReadValue<float>() == 1;
     }
 
     private void OnDisable() {
         inputActions.Disable();
+        inputActions.Interaction.Touchscreen.Disable();
         inputActions.Locomotion.Joystick.started -= OnJoystickStart;
-        //inputActions.Locomotion.Joystick.performed -= OnJoystickStartAndPerform;
+        inputActions.Locomotion.Joystick.performed -= OnJoystickStart;
         inputActions.Locomotion.Joystick.canceled -= OnJoystickCancel;
 
         inputActions.Interaction.SpaceKey.started -= OnSpaceKey;
