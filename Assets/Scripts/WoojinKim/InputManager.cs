@@ -5,9 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Linq;
 using UnityEngine.EventSystems;
-using ExitGames.Client.Photon.StructWrapping;
 using UnityEngine.UI;
-using Unity.Burst.Intrinsics;
 
 [System.Serializable]
 public class InputManagerData {
@@ -23,7 +21,8 @@ public class InputManager : MonoBehaviour {
     [SerializeField] private InputManagerData _inputData;
     public InputManagerData InputData => _inputData;
 
-    private MobileControls inputActions;
+    public MobileControls inputActions;
+    public WeaponManager weaponManager;
 
     [SerializeField] private RectTransform _joystickButton;
     private Rect _rect;
@@ -39,9 +38,6 @@ public class InputManager : MonoBehaviour {
         inputActions.Enable();
         inputActions.Interaction.Touchscreen.Enable();
 
-        inputActions.Locomotion.Joystick.started -= OnJoystickStartTimer;
-        inputActions.Locomotion.Joystick.started += OnJoystickStartTimer;
-
         inputActions.Locomotion.Joystick.started -= OnJoystickStart;
         inputActions.Locomotion.Joystick.started += OnJoystickStart;
         inputActions.Locomotion.Joystick.performed -= OnJoystickStart;
@@ -55,6 +51,13 @@ public class InputManager : MonoBehaviour {
         inputActions.Interaction.SpaceKey.performed += OnSpaceKey;
         inputActions.Interaction.SpaceKey.canceled -= OnSpaceKey;
         inputActions.Interaction.SpaceKey.canceled += OnSpaceKey;
+
+        inputActions.Interaction.MouseLeft.started -= OnLeftClick;
+        inputActions.Interaction.MouseLeft.started += OnLeftClick;
+        inputActions.Interaction.MouseLeft.performed -= OnLeftClick;
+        inputActions.Interaction.MouseLeft.performed += OnLeftClick;
+        inputActions.Interaction.MouseLeft.canceled -= OnLeftClick;
+        inputActions.Interaction.MouseLeft.canceled += OnLeftClick;
     }
     private void OnJoystickStart(InputAction.CallbackContext context) {
         _inputData.velocityIS = context.ReadValue<Vector2>();
@@ -63,14 +66,13 @@ public class InputManager : MonoBehaviour {
         _inputData.velocityIS.Set(0, 0);
     }
 
-    private void OnJoystickStartTimer(InputAction.CallbackContext context) {
-        //pressTimer = StartCoroutine();
-    }
-
-    //private float IEnumerator I
-
     private void OnSpaceKey(InputAction.CallbackContext context) {
         _inputData.isJump = context.ReadValue<float>() == 1;
+    }
+
+    private void OnLeftClick(InputAction.CallbackContext context) {
+        _inputData.isFire = context.ReadValue<float>() == 1;
+        weaponManager.OnLeftClick(_inputData.isFire);
     }
 
     private void OnDisable() {
@@ -83,12 +85,16 @@ public class InputManager : MonoBehaviour {
         inputActions.Interaction.SpaceKey.started -= OnSpaceKey;
         inputActions.Interaction.SpaceKey.performed -= OnSpaceKey;
         inputActions.Interaction.SpaceKey.canceled -= OnSpaceKey;
+
+        inputActions.Interaction.MouseLeft.started -= OnLeftClick;
+        inputActions.Interaction.MouseLeft.performed -= OnLeftClick;
+        inputActions.Interaction.MouseLeft.canceled -= OnLeftClick;
     }
 
     private void Start() {
         _rect = new Rect(_joystickButton.rect);
         _image = _joystickButton.gameObject.GetComponent<Image>();
-        _rect.position = _joystickButton.parent.Get<RectTransform>().anchoredPosition - (_rect.size /2) + new Vector2(_image.raycastPadding.x, _image.raycastPadding.y);
+        _rect.position = _joystickButton.parent.GetComponent<RectTransform>().anchoredPosition - (_rect.size /2) + new Vector2(_image.raycastPadding.x, _image.raycastPadding.y);
         _rect.size -= new Vector2(_image.raycastPadding.x, _image.raycastPadding.y) * 2;
         
     }
@@ -97,17 +103,6 @@ public class InputManager : MonoBehaviour {
         _inputData.swipeIS = touchDelta * screenSensitivity;
 
     }
-
-    private void LateUpdate() {
-        if (_inputData.velocityIS != Vector2.zero && oldVelocityIS == Vector2.zero) {
-            
-        } else if (_inputData.velocityIS == Vector2.zero && oldVelocityIS != Vector2.zero) {
-            
-        }
-
-        oldVelocityIS = _inputData.velocityIS;
-    }
-
 
     private Vector2 GetTouchDelta() {
         if (Touchscreen.current == null) return Vector2.zero;
