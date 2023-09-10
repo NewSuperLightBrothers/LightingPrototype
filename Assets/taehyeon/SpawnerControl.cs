@@ -14,7 +14,10 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
 
     private void Awake()
     {
-        
+        NetworkManager.Singleton.OnServerStarted += () =>
+        {
+            NetworkObjectPool.Instance.InitializePool();
+        };
     }
 
     public void SpawnObjects()
@@ -23,7 +26,9 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
 
         for (int i = 0; i < maxObjectInstanceCount; i++)
         {
-            GameObject go = Instantiate(_objectPrefab, new Vector3(Random.Range(-10, 10), 10.0f, Random.Range(-10, 10)), Quaternion.identity);
+            // GameObject go = Instantiate(_objectPrefab, new Vector3(Random.Range(-10, 10), 10.0f, Random.Range(-10, 10)), Quaternion.identity);
+            GameObject go = NetworkObjectPool.Instance.GetNetworkObject(_objectPrefab).gameObject;
+            go.transform.position = new Vector3(Random.Range(-10, 10), 10.0f, Random.Range(-10, 10));
             go.GetComponent<NetworkObject>().Spawn();
             
         }
