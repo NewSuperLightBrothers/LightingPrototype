@@ -4823,7 +4823,7 @@ GameObject:
   - component: {fileID: 9073017907678403227}
   - component: {fileID: 3858565777216842866}
   m_Layer: 0
-  m_Name: ParticleObj_BulletLaser
+  m_Name: ParticleObj_BulletSpark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

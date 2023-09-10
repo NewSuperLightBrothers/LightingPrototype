@@ -12,7 +12,7 @@ public class LaserParticleSystem : MonoBehaviour
 
     private void Update()
     {
-        if (isparticleStop() && _guntype == LaserGunType.Bullet )
+        if (isparticleStop() && _guntype == LaserGunType.Bullet)
         {
             Destroy(this.gameObject);
         }
