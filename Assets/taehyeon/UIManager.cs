@@ -11,10 +11,11 @@ namespace Taehyeon
         [SerializeField] private Button startServerButton;
         [SerializeField] private Button startHostButton;
         [SerializeField] private Button startClientButton;
+        [SerializeField] private Button executePhysicsButton;
         
         [SerializeField] private TextMeshProUGUI playersInGameText;
 
-
+        private bool hasServerStarted = false;
         private void Awake()
         {
             Cursor.visible = true;
@@ -57,6 +58,22 @@ namespace Taehyeon
                 {
                     Debug.Log("Client failed to start");
                 }
+            });
+
+            NetworkManager.Singleton.OnServerStarted += () =>
+            {
+                hasServerStarted = true;
+            };
+            
+            executePhysicsButton.onClick.AddListener(() =>
+            {
+                if (!hasServerStarted)
+                {
+                    Debug.Log("Server not started");
+                    return;
+                }
+                
+                SpawnerControl.Instance.SpawnObjects();
             });
         }
 

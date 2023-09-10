@@ -6,7 +6,7 @@ using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlayersManager : Singleton<PlayersManager>
+public class PlayersManager : NetworkSingleton<PlayersManager>
 {
     private NetworkVariable<int> _playersInGame = new NetworkVariable<int>();
     
@@ -19,7 +19,7 @@ public class PlayersManager : Singleton<PlayersManager>
     private void Start()
     {
         NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
-        {
+        { 
             if (IsServer)
             {
                 Debug.Log($"{id} connected");

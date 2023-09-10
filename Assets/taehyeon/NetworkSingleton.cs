@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Taehyeon
 {
-    public class Singleton<T> : MonoBehaviour where T : Component
+    public class NetworkSingleton<T> : NetworkBehaviour where T : Component
     {
         private static T _instance;
 
