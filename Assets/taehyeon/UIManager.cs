@@ -12,7 +12,7 @@ namespace Taehyeon
         [SerializeField] private Button startHostButton;
         [SerializeField] private Button startClientButton;
         [SerializeField] private Button executePhysicsButton;
-        
+        [SerializeField] private InputField joinCodeInput;
         [SerializeField] private TextMeshProUGUI playersInGameText;
 
         private bool hasServerStarted = false;
@@ -24,8 +24,14 @@ namespace Taehyeon
 
         private void Start()
         {
-            startHostButton.onClick.AddListener(() =>
+            // Start host
+            startHostButton.onClick.AddListener(async () =>
             {
+                if (RelayManager.Instance.IsRelayEnabled)
+                {
+                    await RelayManager.Instance.SetupRelay();
+                }   
+                
                 if (NetworkManager.Singleton.StartHost())
                 {
                     Debug.Log("Host started");
@@ -36,7 +42,8 @@ namespace Taehyeon
                 }
             });
             
-            startServerButton.onClick.AddListener(() =>
+            // Start server
+            startServerButton.onClick.AddListener( () =>
             {
                 if(NetworkManager.Singleton.StartServer())
                 {
@@ -48,9 +55,18 @@ namespace Taehyeon
                 }
             });
             
-            startClientButton.onClick.AddListener(() =>
+            // Start client
+            startClientButton.onClick.AddListener(async () =>
             {
-                if(NetworkManager.Singleton.StartClient())
+                if(string.IsNullOrEmpty(joinCodeInput.text)) return;
+                
+                if (RelayManager.Instance.IsRelayEnabled)
+                {
+                    await RelayManager.Instance.JoinRelay(joinCodeInput.text);
+                }
+
+
+                if(NetworkManager.Singleton.StartClient()) 
                 {
                     Debug.Log("Client started");   
                 }
@@ -59,7 +75,7 @@ namespace Taehyeon
                     Debug.Log("Client failed to start");
                 }
             });
-
+            
             NetworkManager.Singleton.OnServerStarted += () =>
             {
                 hasServerStarted = true;
