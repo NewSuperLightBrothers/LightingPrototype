@@ -12,8 +12,7 @@ public class TestPlayer : MonoBehaviour
     void Update()
     {
 
-
-        if (TestHP < 0)
+        if (TestHP <= 0)
         {
             print("die!");
             Destroy(this.gameObject);

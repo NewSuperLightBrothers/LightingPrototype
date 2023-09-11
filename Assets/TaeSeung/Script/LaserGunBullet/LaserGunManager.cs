@@ -21,38 +21,27 @@ public abstract class LaserGunManager : LaserGunWeaponSystem
     protected Ray _ray = new();
 
 
-    [SerializeField]
-    private float _emissionstrength;
-    private Color _materialcolor;
-
-
     protected abstract void LaserBulletDestroy();
     protected abstract void LaserBulletFire();
     protected abstract void LaserBulletReflection();
-
     protected abstract void LaserBulletToPlayer(Collider other);
-
-
-    private void Awake()
-    {
-        if (_laserinfo.Team == LaserTeamType.Red) _materialcolor = Color.red;
-        else if (_laserinfo.Team == LaserTeamType.Blue) _materialcolor = Color.blue;
-        else if (_laserinfo.Team == LaserTeamType.Green) _materialcolor = Color.green;
-    }
 
 
     private void Start()
     {
-      
-        _bulletforwardvector = transform.forward;
-        _startposition = transform.position;
+        VectorInitialize(transform.position, transform.forward);
+        MakeMirrorRayhitInfo(_ray, 500);
+        SetObjectTeamColor(_materialcolor, _emissionstrength);
+    }
+
+
+    protected void VectorInitialize(Vector3 newstartposition, Vector3 forwardvector)
+    {
+        _startposition = newstartposition;
+        _bulletforwardvector = forwardvector;
 
         _ray.direction = _bulletforwardvector;
         _ray.origin = _startposition;
-
-        MakeMirrorRayhitInfo(_ray, 500);
-
-        _laserinfo.bulletlinerenderer.material.SetColor("_EmissionColor", _materialcolor * Mathf.Pow(2, _emissionstrength));
     }
 
 
@@ -73,5 +62,8 @@ public abstract class LaserGunManager : LaserGunWeaponSystem
         }
     }
 
-
+    protected override void SetObjectTeamColor(Color color, float emissionstrength)
+    {
+        _laserinfo.bulletlinerenderer.material.SetColor("_EmissionColor", color * Mathf.Pow(2, emissionstrength));
+    }
 }
