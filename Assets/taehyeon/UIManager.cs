@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Taehyeon
@@ -12,7 +13,9 @@ namespace Taehyeon
         [SerializeField] private Button startHostButton;
         [SerializeField] private Button startClientButton;
         [SerializeField] private Button executePhysicsButton;
+        [SerializeField] private Button changeSceneButton;
         [SerializeField] private InputField joinCodeInput;
+        
         [SerializeField] private TextMeshProUGUI playersInGameText;
 
         private bool hasServerStarted = false;
@@ -90,6 +93,14 @@ namespace Taehyeon
                 }
                 
                 SpawnerControl.Instance.SpawnObjects();
+            });
+            
+            changeSceneButton.onClick.AddListener(() =>
+            {
+                if (NetworkManager.Singleton.IsServer)
+                {
+                    NetworkManager.Singleton.SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
+                }
             });
         }
 
